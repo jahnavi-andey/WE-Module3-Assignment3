@@ -1,0 +1,89 @@
+CREATE DATABASE Pokemon;
+create table Pokemon (
+    	pid INT PRIMARY KEY,
+	pname VARCHAR(20),
+    	primary_type_id INT NOT NULL,
+    	secondary_type_id INT,
+	foreign key(primary_type_id) references Ptype(tid),
+	foreign key(secondary_type_id) references Ptype(tid)
+);
+USE Pokemon;
+create table Ptype (
+	tid INT PRIMARY KEY,
+    	tname VARCHAR(50)
+);
+create table Move (
+	mo_id INT PRIMARY KEY,
+    	mo_name VARCHAR(50),
+	mo_power VARCHAR(50),
+    	type_id INT,
+    	FOREIGN KEY(type_id) REFERENCES Ptype(tid)
+);
+create table Pokemon_Move (
+	pokemon_id INT,
+    	move_id INT,
+    	FOREIGN KEY(pokemon_id) REFERENCES Pokemon(pid),
+    	FOREIGN KEY(move_id) REFERENCES Move(mo_id)
+);
+
+INSERT INTO Ptype (tid, tname) VALUES (1, 'Grass'), (2, 'Fire'), (3, 'Water'), (4, 'Normal'), (5, 'Flying');
+SELECT * FROM Move;
+INSERT INTO Pokemon (pid, pname, primary_type_id, secondary_type_id) VALUES
+
+(101, 'Bulbasaur', 1, NULL),
+(102, 'Charmander', 2, NULL),
+(103, 'Squirtle', 3, NULL),
+(104, 'Eevee', 4, NULL),
+(105, 'Pidgey', 4, 5);
+INSERT INTO Move (mo_id, mo_name, mo_power, type_id) VALUES
+(10, 'Tackle', 35, 4),
+(11, 'Water Gun', 40, 3),
+(12, 'Ember', 40, 2),
+(13, 'Vine Whip', 40, 1),
+(14, 'Wing Attack', 65, 5),
+(15, 'Headbutt', 70, 4),
+(16, 'Return', 100, 4);
+
+INSERT INTO Pokemon_Move (pokemon_id, move_id) VALUES
+(101, 10),
+(101, 13),
+(101, 16); 
+
+INSERT INTO Pokemon_Move (pokemon_id, move_id) VALUES
+(102, 10), 
+(102, 12), 
+(102, 16); 
+
+INSERT INTO Pokemon_Move (pokemon_id, move_id) VALUES
+(103, 10), 
+(103, 11), 
+(103, 16); 
+
+INSERT INTO Pokemon_Move (pokemon_id, move_id) VALUES
+(104, 10),
+(104, 15), 
+(104, 16); 
+
+INSERT INTO Pokemon_Move (pokemon_id, move_id) VALUES
+(105, 10), 
+(105, 14), 
+(105, 16); 
+
+Query that returns all the pokemon who can learn ‘Return’.
+
+SELECT * FROM Pokemon_Move;
+SELECT p.pname
+FROM Pokemon p
+JOIN Pokemon_Move pm ON p.pid = pm.pokemon_id
+JOIN Move m ON pm.move_id = m.mo_id
+WHERE m.mo_name = 'Return';
+
+Query that returns all the moves in the game that are powerful against Grass. 
+
+SELECT mo_name
+FROM Move
+WHERE type_id IN (
+    SELECT tid
+    FROM Ptype
+    WHERE tname IN ('Fire', 'Flying')
+);

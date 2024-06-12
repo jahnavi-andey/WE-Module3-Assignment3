@@ -1,0 +1,30 @@
+1. Pokemon collection:
+
+{
+    "_id": ObjectId(),
+    "name": "Bulbasaur",
+    "primary_type": "Grass",
+    "secondary_type": null,
+    "moves": [
+        "Tackle",
+        "Vine Whip",
+        "Return"
+    ]
+}
+
+2. Move collection:
+
+{
+    "_id": ObjectId(),
+    "name": "Tackle",
+    "power": 35,
+    "type": "Normal"
+}
+
+Query that returns all the pokemon who can learn ‘Return’.
+
+db.Pokemon.find({"moves": "Return"}, {"name": 1, "_id": 0});
+
+Query that returns all the moves in the game that are powerful against Grass.
+ 
+db.Move.find({"type": {"$in": ["Fire", "Flying"]}}, {"name": 1, "_id": 0});
